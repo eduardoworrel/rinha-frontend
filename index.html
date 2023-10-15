@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        summary {
+            list-style-type: none;
+        }
+
+        details {
+            margin-left: 20px;
+        }
+
+        strong {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="json">
+    <main id="main"></main>
+    <script>
+        const worker = new Worker('worker.js');
+             
+
+        const json = document.getElementById('json');
+        const main = document.getElementById('main');
+
+        worker.onmessage = function(e) {
+           
+            const result = e.data;
+            main.innerHTML += result;   
+        }
+
+        json.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function() {
+                worker.postMessage(reader.result);
+            };
+            reader.readAsText(file);        
+        })
+
+    </script>
+</body>
+</html>
